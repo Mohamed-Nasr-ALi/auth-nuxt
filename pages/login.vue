@@ -9,6 +9,10 @@
         <label>Password</label>
         <input class="border-2"  type="text" v-model="login.password" />
       </div>
+      <div class="my-3.5">
+        <label>Remember</label>
+        <input class="border-2"  type="checkbox" v-model="login.remember" />
+      </div>
       <button class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500  transition ease-in-out duration-150 " :class="{'cursor-not-allowed':loading,'hover:bg-indigo-400':loading}" :disabled="loading">
         <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -27,7 +31,8 @@ export default {
       loading:false,
       login: {
         username: '',
-        password: ''
+        password: '',
+        remember:false
       }
     }
   },
@@ -35,7 +40,7 @@ export default {
     async userLogin() {
       try {
         this.loading=true
-        let response = await this.$auth.loginWith('local', { data: this.login })
+        let response = await this.$auth.loginWith('laravelSanctum', { data: this.login })
         console.log(response)
         this.loading=false
       } catch (err) {

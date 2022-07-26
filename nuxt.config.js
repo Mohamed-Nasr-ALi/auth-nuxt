@@ -37,6 +37,10 @@ export default {
     '@nuxtjs/auth-next'
   ],
   axios: {
+    common: {
+      'Accept': 'application/json, text/plain, */*'
+    },
+    credentials: true,
     baseURL: process.env.NUXT_ENV_BASE_URL // Used as fallback if no runtime config is provided
   },
   publicRuntimeConfig: {
@@ -58,22 +62,27 @@ export default {
   },
   auth: {
     strategies: {
-      local: {
-        token: {
-          property: 'token',
-          global: true,
-          type: 'Bearer'
+      laravelSanctum: {
+        cookie: {
+          // (optional) If set, we check this cookie existence for loggedIn check
+          name: 'XSRF-TOKEN',
         },
+        url: process.env.NUXT_ENV_BASE_URL,
+        endpoints: {
+          login: {url: '/login', method: 'post'},
+          logout: {url: '/logout', method: 'post'},
+          user: {url: '/api/auth/user', method: 'get'},
+          // (optional) If set, we send a get request to this endpoint before login
+          csrf: {
+            url: process.env.NUXT_ENV_BASE_URL+'/sanctum/csrf-cookie'
+          }
+        },
+        provider: 'laravel/sanctum',
         user: {
           property: 'data',
           autoFetch: true
-        },
-        endpoints: {
-          login: {url: '/api/auth/login', method: 'post'},
-          logout: {url: '/api/auth/logout', method: 'post'},
-          user: {url: '/api/auth/user', method: 'get'}
         }
-      }
+      },
     },
     redirect: {
       login: '/login',
